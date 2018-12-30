@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "980935340724",
+    "firebase_url": "https://gotalk-92227.firebaseio.com",
+    "project_id": "gotalk-92227",
+    "storage_bucket": "gotalk-92227.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:980935340724:android:e07219cce8fdec08",
+        "android_client_info": {
+          "package_name": "com.nexife.nns.gotalk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "980935340724-2kncibk9act62ojjvt7fog28u44k6c4b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nexife.nns.gotalk",
+            "certificate_hash": "892b4657b2035fc50e148db8c8f7a9387e9f913a"
+          }
+        },
+        {
+          "client_id": "980935340724-9cmikt742d7tvric6tgssn56plt8fqnr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGq8ppv7NwfrbX7xU_DC6Kd_z6z7F3Ki0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "980935340724-9cmikt742d7tvric6tgssn56plt8fqnr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
