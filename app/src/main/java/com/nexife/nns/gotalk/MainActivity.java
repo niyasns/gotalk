@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,9 +23,10 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText mPhoneNumber, Code;
+    private EditText mPhoneNumber, mCode;
     private Button mSendBtn;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+    private String mVerificationId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +37,16 @@ public class MainActivity extends AppCompatActivity {
         userIsLoggedIn();
 
         mPhoneNumber = findViewById(R.id.phoneNumber);
-        Code = findViewById(R.id.code);
+        mCode = findViewById(R.id.code);
         mSendBtn = findViewById(R.id.sendBtn);
 
         mSendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startPhoneNumberVerification();
+                if(mVerificationId != null )
+                    verifyPhoneNumberWithCode();
+                else
+                    startPhoneNumberVerification();
             }
         });
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -54,7 +59,25 @@ public class MainActivity extends AppCompatActivity {
             public void onVerificationFailed(FirebaseException e) {
 
             }
+
+            @Override
+            public void onCodeSent(String Id, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                super.onCodeSent(Id, forceResendingToken);
+
+                mVerificationId = Id;
+                mSendBtn.setText("Verify Code");
+            }
         };
+    }
+
+    private void verifyPhoneNumberWithCode() {
+        String code = mCode.getText().toString();
+        if(code != null) {
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
+            signInWithPhoneAuthCredential(credential);
+        } else {
+            Toast.makeText(this, "Please enter verification code", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) {
