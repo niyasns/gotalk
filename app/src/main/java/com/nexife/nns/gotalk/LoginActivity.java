@@ -105,6 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                                     userMap.put("name", user.getDisplayName());
                                     mUserDB.updateChildren(userMap);
                                 }
+                                userIsLoggedIn();
                             }
 
                             @Override
@@ -113,7 +114,6 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         });
                     }
-                    userIsLoggedIn();
                 }
             }
         });

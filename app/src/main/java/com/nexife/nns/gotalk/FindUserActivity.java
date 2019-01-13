@@ -2,17 +2,27 @@ package com.nexife.nns.gotalk;
 
 import android.database.Cursor;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.widget.LinearLayout;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 public class FindUserActivity extends AppCompatActivity {
 
+    private static final String TAG = "FindUserActivity";
     private RecyclerView mUserListView;
     private RecyclerView.Adapter mUserListAdapter;
     private RecyclerView.LayoutManager mUserListLayoutManager;
@@ -30,27 +40,69 @@ public class FindUserActivity extends AppCompatActivity {
     }
 
     private void getContactList() {
+        String ISOPrefix = getCountryISO();
         Cursor phones = getContentResolver()
                 .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
         while (phones.moveToNext()) {
             String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             String phone = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            UserObject mContacts = new UserObject(name, phone);
-            contactList.add(mContacts);
-            mUserListAdapter.notifyDataSetChanged();
+
+            phone = phone.replace(" ", "");
+            phone = phone.replace("-", "");
+            phone = phone.replace("(", "");
+            phone = phone.replace(")", "");
+
+            if(!String.valueOf(phone.charAt(0)).equals("+")) {
+                phone = ISOPrefix + phone;
+            }
+            UserObject mContact = new UserObject(name, phone);
+            contactList.add(mContact);
+            getUserDetails(mContact);
         }
+    }
+
+    private void getUserDetails(UserObject mContact) {
+        DatabaseReference mUserDB = FirebaseDatabase.getInstance().getReference().child("user");
+        Query userQuery = mUserDB.orderByChild("phone").equalTo(mContact.getPhone());
+        userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    String phone = "",
+                            name = "";
+                    for(DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        if(userSnapshot.child("phone").getValue() != null) {
+                            phone = userSnapshot.child("phone").getValue().toString();
+                        }
+                        if(userSnapshot.child("name").getValue() != null) {
+                            name = userSnapshot.child("name").getValue().toString();
+                        }
+                        UserObject mUser = new UserObject(name, phone);
+                        userList.add(mUser);
+                        mUserListAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private String getCountryISO() {
         String iso = null;
         TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext()
-                .getSystemService(TELEPHONY_SERVICE);
+                .getSystemService(getApplicationContext().TELEPHONY_SERVICE);
         if (telephonyManager.getNetworkCountryIso() != null) {
             if(telephonyManager.getNetworkCountryIso().equals("")) {
                 iso = telephonyManager.getNetworkCountryIso();
             }
         }
-        return iso;
+        String locale = getApplicationContext().getResources().getConfiguration().locale.getCountry();
+        Log.d(TAG, locale);
+        return CountryToPhonePrefix.getPhone(locale);
     }
 
     private void initializeRecyclerView() {
