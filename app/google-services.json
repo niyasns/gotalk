@@ -23,6 +23,22 @@
           }
         },
         {
+          "client_id": "980935340724-ta9vqfrm05htgh2kd0os0h9karqi2bl8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nexife.nns.gotalk",
+            "certificate_hash": "1bc1d78b47591cd2e59b1bcb257380429f72f26f"
+          }
+        },
+        {
+          "client_id": "980935340724-o2tm7sq06ior31s265rcgbuc1s8mhb50.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nexife.nns.gotalk",
+            "certificate_hash": "f26c5408d2500b6de9c79d246b5c2f3237a84dee"
+          }
+        },
+        {
           "client_id": "980935340724-9cmikt742d7tvric6tgssn56plt8fqnr.apps.googleusercontent.com",
           "client_type": 3
         }

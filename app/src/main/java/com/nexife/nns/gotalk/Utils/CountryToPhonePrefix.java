@@ -1,4 +1,4 @@
-package com.nexife.nns.gotalk;
+package com.nexife.nns.gotalk.Utils;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void verifyPhoneNumberWithCode() {
         String code = mCode.getText().toString();
-        if(code != null) {
+        if(!code.isEmpty()) {
             PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
             signInWithPhoneAuthCredential(credential);
         } else {
